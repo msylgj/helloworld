@@ -87,8 +87,12 @@ if Process_list:find("ssr.server") then
 	server_run = 1
 end
 
-if Process_list:find("ssrplus/bin/pdnsd") or (Process_list:find("ssrplus.dns") and Process_list:find("dns2socks.127.0.0.1.*127.0.0.1.5335")) then
+if Process_list:find("ssrplus/bin/pdnsd") then
 	pdnsd_run = 1
+end
+
+if Process_list:find("ssrplus/bin/dnsproxy") or (Process_list:find("ssrplus.dns") and Process_list:find("dns2socks.127.0.0.1.*127.0.0.1.5335")) then
+	pdnsd_run = 2
 end
 
 m = SimpleForm("Version")
@@ -114,7 +118,7 @@ end
 if uci:get_first("shadowsocksr", 'global', 'pdnsd_enable', '0') ~= '0' then
 	s = m:field(DummyValue, "pdnsd_run", translate("DNS Anti-pollution"))
 	s.rawhtml = true
-	if pdnsd_run == 1 then
+	if pdnsd_run == 1 or pdnsd_run == 2 then
 		s.value = font_blue .. bold_on .. translate("Running") .. bold_off .. font_off
 	else
 		s.value = translate("Not Running")
